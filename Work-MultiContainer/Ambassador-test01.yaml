@@ -1,0 +1,31 @@
+  # this is pod ambassador-webser, where container run nginx webserver using port 80 and bellow is K8s object(Service)
+  # which expose nginx webserver
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ambassador-webserver  # Name of POD
+  labels:                     #labels will use when someone want to access pod
+    app: ambass-pod
+
+spec:
+  containers:
+  - name: cont-nginx          # Name of container
+    image: nginx:stable
+    ports:
+    - containerPort: 80          #will used to access webserver
+
+
+---                 #to divide two configurations
+
+apiVersion: v1
+kind: Service       #Service will used to access nginx webser that will create in above containers
+metadata:
+  name: ambassador-service
+spec:
+  selector:             #Selector will look those pod where labels defined
+    app: ambass-pod     #service will expose pod using this selector(not only this pod every which has selector)
+  ports:
+  - protocol: TCP
+    port: 8081
+    targetPort: 80
