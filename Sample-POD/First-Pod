@@ -1,1 +1,14 @@
+## This is Sample-pod
+apiVersion: v1     #POD is defined in apiversion:v1 by k8s developer
+kind: Pod          # it tell which thing we want
+metadata:
+  name: sample-pod
+   labels:
+    app: front
+spec:
+  containers:
+  - name: nginx-cont
+    image: nginx:1.14
+    ports:
+    - containerPort: 80
 
