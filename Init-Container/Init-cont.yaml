@@ -1,0 +1,16 @@
+ # Main purpose to create Init container is: this init container will run that time we decided and will stop
+ # when main container will start
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-cont-pod
+spec:
+  containers:
+  - name: main-cont         # this main container will run after init-container
+    image: nginx:stable
+  initContainers:
+  - name: init-con
+    image: busybox:stable
+    command: ['sh', '-c', 'sleep 60']       #this init container will initalize first for 60 seconds when pod created then main
+                                            #container will start
