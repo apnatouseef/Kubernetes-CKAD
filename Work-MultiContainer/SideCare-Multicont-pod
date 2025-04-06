@@ -1,1 +1,25 @@
+# This is Side-Care example where 2 container will run main and side-care
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar-pod
+spec:
+  containers:
+  - name: main-con
+    image: busybox:stable
+    command: ['sh', '-c', 'echo "i am learning k8s" > /shared-dir/data.txt; while true; do sleep 5; done']
+    volumeMounts:
+    - name: shared-vol
+      mountPath: /shared-dir
+
+  - name: sidecar-con
+    image: busybox:stable
+    command: ['sh', '-c', 'while true; do cat /shared-dir/data.txt; sleep 5; done']
+    volumeMounts:
+    - name: shared-vol
+      mountPath: /shared-dir
+
+  volumes:
+  - name: shared-vol
+    emptyDir: {}
 
