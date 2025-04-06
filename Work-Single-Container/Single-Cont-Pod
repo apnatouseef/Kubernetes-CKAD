@@ -1,0 +1,13 @@
+# this is single container pod
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alnafi-pod
+  labels:
+    app: frontend
+    version: dev
+spec:
+  containers:
+  - name: alpha0
+    image: nginx
