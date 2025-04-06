@@ -1,3 +1,4 @@
+           side-care.yaml
 # This is Side-Care example where 2 container will run main and side-care
 apiVersion: v1
 kind: Pod
