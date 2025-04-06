@@ -1,0 +1,37 @@
+  # In this pod main-cont will go to nginix webserver using service and port 8080 but at that port 8080 closed so now ambassador-cont
+  # will take charge of main container and use port 8081 to go at Nginx webserver
+  
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ambassador-test-pod
+spec:
+  containers:             #this main will curl on localhost using port 8080
+  - name: main-cont
+    image: radial/busyboxplus:curl
+    command: ['sh', '-c', 'while true; do curl localhost:8080; sleep 5; done']
+
+  - name: ambassador-cont  # this ambassador container will take over duties of main container who is using port 8080 but
+                           # ambassador know port 8080 closed so it will use 8081 that mentioned in ConfigMap
+    image: haproxy:2.4
+    volumeMounts:
+    - name: config
+      mountPath: /usr/local/etc/haproxy/
+
+  volumes:
+  - name: config
+    configMap:
+      name: haproxy-config
+
+---
+apiVersion: v1
+kind: ConfigMap        #its also an object like service was
+metadata:
+  name: haproxy-config
+data:              # in configmap we always define data not spec
+  haproxy.cfg: |
+    frontend ambassador
+      bind *:8080
+      default_backend ambassador_service
+    backend ambassador_service
+      server svc ambassador-service:8081
